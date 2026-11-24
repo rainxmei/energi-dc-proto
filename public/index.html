@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monitor Energi DC</title>
+<style>
+  :root {
+    --bg: #f4f6f8; --card: #ffffff; --ink: #1b1f24; --muted: #6b7280; --line: #e5e7eb;
+    --teal: #139a8a; --red: #dc2626; --amber: #f59e0b; --green: #16a34a; --blue: #2563eb;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 980px; margin: 0 auto; padding: 20px 16px 48px; }
+  header { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 16px; }
+  h1 { font-size: 20px; margin: 0; flex: 1 1 auto; }
+  h2 { font-size: 14px; margin: 0 0 10px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+  .badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; font-weight: 600; font-size: 13px; background: #e5e7eb; color: #374151; }
+  .badge::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+  .badge.on { background: #dcfce7; color: var(--green); }
+  .badge.off { background: #fee2e2; color: var(--red); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+  .grid { display: grid; gap: 12px; }
+  .g4 { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); margin: 12px 0; }
+  .ch-title { font-weight: 700; margin-bottom: 6px; }
+  .big { font-size: 28px; font-weight: 700; letter-spacing: -.01em; }
+  .unit { font-size: 14px; color: var(--muted); font-weight: 500; margin-left: 3px; }
+  .row { display: flex; justify-content: space-between; color: var(--muted); font-size: 14px; margin-top: 4px; }
+  .row b { color: var(--ink); font-weight: 600; }
+  canvas { width: 100%; height: 220px; display: block; }
+  .muted { color: var(--muted); }
+  .small { font-size: 13px; }
+  .err { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; padding: 10px 14px; border-radius: 10px; margin-bottom: 12px; }
+  .ctl { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 8px; }
+  input[type=password] { padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font: inherit; min-width: 220px; }
+  button { padding: 9px 16px; border: 0; border-radius: 8px; font: inherit; font-weight: 600; cursor: pointer; background: var(--teal); color: #fff; }
+  button.ghost { background: #e5e7eb; color: #111827; }
+  button.warn { background: var(--amber); color: #111; }
+  button:disabled { opacity: .55; cursor: not-allowed; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Monitor Energi DC &middot; Prototipe</h1>
+    <span id="badge" class="badge">Memuat…</span>
+    <span id="ago" class="muted small"></span>
+  </header>
+
+  <div id="err" class="err" hidden></div>
+
+  <section class="card">
+    <h2>Total semua kanal</h2>
+    <div><span class="big" id="total">—</span><span class="unit">W</span></div>
+    <div class="muted small" id="info">Perangkat: —</div>
+  </section>
+
+  <section class="grid g4" id="kanal"></section>
+
+  <section class="card">
+    <h2>Riwayat daya total</h2>
+    <canvas id="chart"></canvas>
+    <div class="muted small" id="chartinfo"></div>
+  </section>
+
+  <section class="card" style="margin-top:12px">
+    <h2>Kontrol LED bawaan ESP32 (admin)</h2>
+    <div id="ledState" class="small muted">LED: —</div>
+
+    <div id="loginBox" class="ctl">
+      <input id="pw" type="password" placeholder="Password admin" autocomplete="current-password">
+      <button id="btnLogin">Login admin</button>
+    </div>
+
+    <div id="adminBox" class="ctl" hidden>
+      <button id="btnLed">Nyalakan LED</button>
+      <button id="btnLogout" class="ghost">Logout</button>
+    </div>
+    <div id="ctlMsg" class="small muted" style="margin-top:8px"></div>
+    <p class="small muted" style="margin:10px 0 0">Siapa saja boleh melihat data. Hanya admin yang login yang bisa mengubah LED.</p>
+  </section>
+</main>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const POLL_MS = 3000;
+  const ONLINE_DETIK = 15;
+
+  let state = null;
+  let fetchedAt = 0;
+  let token = '';
+  try { token = sessionStorage.getItem('admin_token') || ''; } catch (e) { /* abaikan */ }
+
+  // --- kartu per kanal ---
+  const kanalBox = $('kanal');
+  for (let c = 1; c <= 4; c++) {
+    const d = document.createElement('div');
+    d.className = 'card';
+    d.innerHTML =
+      '<div class="ch-title">Kanal ' + c + '</div>' +
+      '<div><span class="big" id="p' + c + '">—</span><span class="unit">W</span></div>' +
+      '<div class="row"><span>Tegangan</span><b><span id="v' + c + '">—</span> V</b></div>' +
+      '<div class="row"><span>Arus</span><b><span id="i' + c + '">—</span> A</b></div>';
+    kanalBox.appendChild(d);
+  }
+
+  const fmt = (x, d) => (typeof x === 'number' && isFinite(x) ? x.toFixed(d) : '—');
+
+  async function ambil() {
+    try {
+      const r = await fetch('/api/pengukuran?limit=240', { cache: 'no-store' });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      state = await r.json();
+      fetchedAt = Date.now();
+      $('err').hidden = true;
+      render();
+    } catch (e) {
+      $('err').hidden = false;
+      $('err').textContent = 'Gagal mengambil data: ' + e.message;
+    }
+  }
+
+  function umurDetik() {
+    if (!state || !state.status || !state.status.last_seen) return null;
+    const dasar = (Date.parse(state.server_time) - Date.parse(state.status.last_seen)) / 1000;
+    return dasar + (Date.now() - fetchedAt) / 1000;
+  }
+
+  function renderStatus() {
+    const umur = umurDetik();
+    const badge = $('badge');
+    if (umur === null) {
+      badge.className = 'badge';
+      badge.textContent = 'Belum ada data';
+      $('ago').textContent = '';
+      return;
+    }
+    const online = umur < ONLINE_DETIK;
+    badge.className = 'badge ' + (online ? 'on' : 'off');
+    badge.textContent = online ? 'ESP32 online' : 'ESP32 offline';
+    $('ago').textContent = 'Data terakhir ' + Math.max(0, Math.round(umur)) + ' detik lalu';
+  }
+
+  function render() {
+    if (!state) return;
+    renderStatus();
+
+    // nilai terbaru per kanal
+    const terbaru = {};
+    for (let n = state.data.length - 1; n >= 0; n--) {
+      const row = state.data[n];
+      if (!(row.channel in terbaru)) terbaru[row.channel] = row;
+    }
+    let total = 0, ada = false;
+    for (let c = 1; c <= 4; c++) {
+      const row = terbaru[c];
+      $('v' + c).textContent = row ? fmt(row.voltage_v, 2) : '—';
+      $('i' + c).textContent = row ? fmt(row.current_a, 3) : '—';
+      $('p' + c).textContent = row ? fmt(row.power_w, 2) : '—';
+      if (row) { total += row.power_w; ada = true; }
+    }
+    $('total').textContent = ada ? fmt(total, 2) : '—';
+
+    const s = state.status || {};
+    const bagian = [];
+    if (typeof s.rssi === 'number') bagian.push('sinyal Wi-Fi ' + s.rssi + ' dBm');
+    if (typeof s.uptime_s === 'number') bagian.push('menyala ' + s.uptime_s + ' detik');
+    $('info').textContent = 'Perangkat: ' + (bagian.length ? bagian.join(' · ') : '—');
+
+    gambarGrafik();
+    renderKontrol();
+  }
+
+  // --- grafik daya total (kanvas biasa, tanpa library) ---
+  function gambarGrafik() {
+    const grup = new Map();
+    for (const row of state.data) grup.set(row.created_at, (grup.get(row.created_at) || 0) + row.power_w);
+    const titik = Array.from(grup.entries()).slice(-80);
+    const cv = $('chart');
+    const dpr = window.devicePixelRatio || 1;
+    const w = cv.clientWidth, h = cv.clientHeight;
+    cv.width = w * dpr; cv.height = h * dpr;
+    const g = cv.getContext('2d');
+    g.scale(dpr, dpr);
+    g.clearRect(0, 0, w, h);
+    $('chartinfo').textContent = titik.length ? titik.length + ' titik terakhir' : 'Belum ada data.';
+    if (titik.length < 2) return;
+
+    const nilai = titik.map((t) => t[1]);
+    let lo = Math.min(...nilai), hi = Math.max(...nilai);
+    if (hi - lo < 0.5) { const mid = (hi + lo) / 2; lo = mid - 0.25; hi = mid + 0.25; }
+    const pad = { l: 44, r: 10, t: 10, b: 20 };
+    const X = (i) => pad.l + (i / (titik.length - 1)) * (w - pad.l - pad.r);
+    const Y = (v) => pad.t + (1 - (v - lo) / (hi - lo)) * (h - pad.t - pad.b);
+
+    g.strokeStyle = '#e5e7eb'; g.fillStyle = '#6b7280'; g.font = '11px system-ui'; g.lineWidth = 1;
+    for (let k = 0; k <= 3; k++) {
+      const v = lo + (k / 3) * (hi - lo), y = Y(v);
+      g.beginPath(); g.moveTo(pad.l, y); g.lineTo(w - pad.r, y); g.stroke();
+      g.fillText(v.toFixed(1) + ' W', 4, y + 4);
+    }
+    g.strokeStyle = '#139a8a'; g.lineWidth = 2; g.beginPath();
+    nilai.forEach((v, i) => (i ? g.lineTo(X(i), Y(v)) : g.moveTo(X(i), Y(v))));
+    g.stroke();
+  }
+
+  // --- kontrol admin ---
+  function renderKontrol() {
+    const minta = Boolean(state.perintah && state.perintah.led);
+    const aktual = state.status && typeof state.status.led_on === 'boolean' ? state.status.led_on : null;
+    let teks = 'LED sekarang: ' + (aktual === null ? '—' : aktual ? 'ON' : 'OFF') + ' (laporan ESP32)';
+    if (aktual !== null && aktual !== minta) teks += ' · perintah ' + (minta ? 'ON' : 'OFF') + ' menunggu ESP32…';
+    $('ledState').textContent = teks;
+    $('btnLed').textContent = minta ? 'Matikan LED' : 'Nyalakan LED';
+    $('btnLed').dataset.next = String(!minta);
+    $('loginBox').hidden = Boolean(token);
+    $('adminBox').hidden = !token;
+  }
+
+  async function login() {
+    $('ctlMsg').textContent = 'Memeriksa password…';
+    try {
+      const r = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: $('pw').value }),
+      });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(r.status === 401 ? 'Password salah' : (j.error || 'HTTP ' + r.status));
+      token = j.token;
+      try { sessionStorage.setItem('admin_token', token); } catch (e) { /* abaikan */ }
+      $('pw').value = '';
+      $('ctlMsg').textContent = 'Login berhasil.';
+      renderKontrol();
+    } catch (e) {
+      $('ctlMsg').textContent = 'Login gagal: ' + e.message;
+    }
+  }
+
+  function logout() {
+    token = '';
+    try { sessionStorage.removeItem('admin_token'); } catch (e) { /* abaikan */ }
+    $('ctlMsg').textContent = 'Sudah logout.';
+    if (state) renderKontrol();
+  }
+
+  async function kirimLed() {
+    const nilai = $('btnLed').dataset.next === 'true';
+    $('btnLed').disabled = true;
+    $('ctlMsg').textContent = 'Mengirim perintah…';
+    try {
+      const r = await fetch('/api/perintah', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+        body: JSON.stringify({ target: 'led', nilai }),
+      });
+      if (r.status === 401) { logout(); throw new Error('Sesi habis, silakan login lagi'); }
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const j = await r.json();
+      if (state) state.perintah = j.perintah;
+      $('ctlMsg').textContent = 'Perintah terkirim. ESP32 mengambilnya pada pengiriman berikutnya (beberapa detik).';
+      renderKontrol();
+    } catch (e) {
+      $('ctlMsg').textContent = 'Gagal: ' + e.message;
+    } finally {
+      $('btnLed').disabled = false;
+    }
+  }
+
+  $('btnLogin').addEventListener('click', login);
+  $('pw').addEventListener('keydown', (e) => { if (e.key === 'Enter') login(); });
+  $('btnLogout').addEventListener('click', logout);
+  $('btnLed').addEventListener('click', kirimLed);
+  window.addEventListener('resize', () => { if (state) gambarGrafik(); });
+
+  ambil();
+  setInterval(ambil, POLL_MS);
+  setInterval(renderStatus, 1000);
+})();
+</script>
+</body>
+</html>
