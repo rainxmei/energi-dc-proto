@@ -103,3 +103,31 @@ Buka `URL` di browser: kartu Kanal 1 harus menampilkan 2,40 W. Login admin dan c
 - Data masuk tiap 3 detik × 4 kanal ≈ 115 ribu baris per hari. Hapus data lama secara berkala (perintah SQL-nya ada di bagian bawah `setup.sql`) atau perbesar `INTERVAL_MS`.
 - Login admin sederhana (satu password, token 12 jam). Cukup untuk prototipe; untuk versi final pertimbangkan Supabase Auth.
 - Kolom status relay per kanal belum ada di tabel `pengukuran`; tambahkan saat relay dipasang.
+
+## Versi sketch dengan INA219 + relay
+
+Sketch `esp32/esp32_energi_dc/esp32_energi_dc.ino` memakai pin sesuai skematik KiCad (lihat `esp32/PINOUT.md`).
+Pasang library "Adafruit INA219" dan "ArduinoJson", isi 4 konstanta di bagian atas, lalu upload.
+Untuk uji relay tanpa sensor, ubah `PAKAI_SENSOR` menjadi `false`.
+
+## Layar TFT (opsional)
+
+Pasang library **Adafruit ILI9341** dan **Adafruit GFX Library** lewat Library Manager. Sketch `esp32_energi_dc` mendeteksinya otomatis. Layar menampilkan 4 kanal (V, A, W, status, lampu relay), total daya, dan status online. Kalau layar tetap gelap, cek kabel RST dan LED modul ke 3V3 (lihat `esp32/PINOUT.md`).
+
+## Deteksi anomali (ML di laptop)
+
+1. Di Supabase > SQL Editor, jalankan **sekali** isi `supabase/tambah_anomali.sql`. Lalu deploy ulang Vercel (file `api/pengukuran.js` berubah).
+2. Di laptop, dari folder `ml/`:
+   ```
+   pip install -r requirements.txt
+   copy .env.example .env        (Windows)  /  cp .env.example .env  (Mac/Linux), lalu isi URL dan kunci secret
+   python anomali.py sim         # uji pipeline dengan data tiruan, tanpa Supabase
+   ```
+3. Biarkan sistem merekam beban yang bekerja **normal** minimal 1–2 jam (makin banyak dan makin beragam makin baik), lalu:
+   ```
+   python anomali.py train --jam 24
+   python anomali.py run         # biarkan terbuka; hasil tampil di kartu kanal dashboard
+   ```
+Cara kerja: tiap kanal dinilai per jendela 30 detik (10 sampel). Dua lapis penilaian: Isolation Forest untuk pola gabungan, dan aturan statistik untuk pergeseran rata-rata arus/tegangan atau arus yang tiba-tiba bergejolak. Sebuah kanal ditandai anomali bila 2 dari 3 jendela berturut-turut mencurigakan. Jendela saat beban mati atau sedang dinyalakan/dimatikan tidak dinilai. Hasil lebih dari 60 detik tidak diperbarui dianggap basi, dan dashboard kembali menulis "Belum aktif".
+
+Latih ulang (`train`) setiap kali beban atau cara pakainya berubah, karena model hanya tahu apa yang pernah dilihatnya.
