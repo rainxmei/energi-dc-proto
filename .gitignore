@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 node_modules
 .env
 .env.local
@@ -8,4 +9,20 @@ ml/.env
 ml/model/
 ml/model_sim/
 ml/data*.csv
+=======
+# OS & Editor
+.DS_Store
+Thumbs.db
+
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+
+# Dependencies & Build
+node_modules/
+.next/
+out/
+.vercel/
+>>>>>>> frontend
 __pycache__/

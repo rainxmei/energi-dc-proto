@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Prototipe: ESP32 → Vercel → Supabase → Dashboard
 
 Tujuan: membuktikan dulu seluruh rantai data sebelum komponen (INA219, relay) datang.
@@ -131,3 +132,24 @@ Pasang library **Adafruit ILI9341** dan **Adafruit GFX Library** lewat Library M
 Cara kerja: tiap kanal dinilai per jendela 30 detik (10 sampel). Dua lapis penilaian: Isolation Forest untuk pola gabungan, dan aturan statistik untuk pergeseran rata-rata arus/tegangan atau arus yang tiba-tiba bergejolak. Sebuah kanal ditandai anomali bila 2 dari 3 jendela berturut-turut mencurigakan. Jendela saat beban mati atau sedang dinyalakan/dimatikan tidak dinilai. Hasil lebih dari 60 detik tidak diperbarui dianggap basi, dan dashboard kembali menulis "Belum aktif".
 
 Latih ulang (`train`) setiap kali beban atau cara pakainya berubah, karena model hanya tahu apa yang pernah dilihatnya.
+=======
+# GridWatch — Smart Home Energy Monitoring & Remote Control
+
+Monorepo proyek GridWatch dengan arsitektur **ESP32 → Supabase ← Website (Next.js + Vercel Serverless)**.
+
+## Struktur Folder
+
+| Folder | Isi & Tanggung Jawab |
+|---|---|
+| `frontend/` | Aplikasi web & PWA (**Next.js + React + TypeScript + Tailwind CSS**) |
+| `backend/` | **Vercel Serverless Functions** (`api/`, `lib/`) & skema database **Supabase** (`supabase/`) |
+| `firmware/` | Sketch Arduino IDE untuk **ESP32** (`esp32_energi_dc`, `esp32_led_dashboard`) & `PINOUT.md` |
+| `docs/` | Dokumen perencanaan (`GRIDWATCH_PRD.md`, `GRIDWATCH_DESIGN.md`, aset referensi) |
+| `archive/` | Komponen di luar scope MVP saat ini (mis. skrip ML Python) |
+
+## Pembagian Kerja Tim
+
+- **Frontend (`frontend/`)**: UI/UX, PWA, state management, integrasi ke API backend / Supabase.
+- **Backend (`backend/`)**: Endpoint Vercel Serverless, autentikasi, validasi perintah relay, dan konfigurasi tabel/RLS Supabase.
+- **Firmware (`firmware/`)**: Pembacaan sensor INA219, kontrol 4 relay, layar TFT, dan komunikasi HTTPS ke backend.
+>>>>>>> frontend
