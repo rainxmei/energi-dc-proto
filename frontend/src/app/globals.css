@@ -35,12 +35,18 @@
   /* =========================================================
      WARNA TEKS DINAMIS (Ubah di sini untuk ganti seluruh web)
      ========================================================= */
-  --gw-text-header: #f7f5ef;                     /* Judul header semua halaman */
-  --gw-text-header-muted: rgba(247, 245, 239, 0.88); /* Eyebrow & subtitle header */
-  --gw-text-glass: #f7f5ef;                      /* Teks utama di card kaca transparan (4 KPI, Grafik, Kontrol Kanal) */
-  --gw-text-glass-muted: rgba(247, 245, 239, 0.86);  /* Label kecil di card kaca transparan */
-  --gw-text-card: #242821;                       /* Teks utama gelap di baris/card terang (Kanal 1-4, 3 card bawah, form) */
-  --gw-text-muted: #5e655a;                      /* Teks keterangan / waktu / caption sekunder */
+  --gw-text-header: #f3ebd4;
+  /* Judul header semua halaman */
+  --gw-text-header-muted: rgba(247, 245, 239, 0.88);
+  /* Eyebrow & subtitle header */
+  --gw-text-glass: #f4f0e6;
+  /* Teks utama di card kaca transparan (4 KPI, Grafik, Kontrol Kanal) */
+  --gw-text-glass-muted: rgba(250, 245, 230, 0.86);
+  /* Label kecil di card kaca transparan */
+  --gw-text-card: #242821;
+  /* Teks utama gelap di baris/card terang (Kanal 1-4, 3 card bawah, form) */
+  --gw-text-muted: #5e655a;
+  /* Teks keterangan / waktu / caption sekunder */
   --gw-soft-sage: #e3e9da;
   --gw-soft-blue: #e2edf1;
   --gw-soft-yellow: #f5ebd2;
