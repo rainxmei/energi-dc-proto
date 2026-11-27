@@ -66,13 +66,13 @@ export default function DashboardPage() {
       {/* Editorial Dashboard Header */}
       <div className="flex flex-col gap-3 xl:flex-row xl:items-end xl:justify-between">
         <div className="min-w-0">
-          <p className="text-[11px] font-semibold tracking-[0.16em] text-gw-cream uppercase">
+          <p className="text-[11px] font-semibold tracking-[0.16em] text-gw-text-header-muted uppercase">
             DASHBOARD
           </p>
-          <h1 className="font-serif-display mt-0.5 text-[30px] leading-tight text-gw-cream sm:text-[38px] xl:text-[42px]">
+          <h1 className="font-serif-display mt-0.5 text-[30px] leading-tight text-gw-text-header sm:text-[38px] xl:text-[42px]">
             Halo, <em className="italic">Rumah Modern</em>
           </h1>
-          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[14px] text-gw-cream/90">
+          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[14px] text-gw-text-header-muted">
             <span>Pantau penggunaan energi rumah Anda secara real-time.</span>
           </div>
         </div>
@@ -201,12 +201,14 @@ export default function DashboardPage() {
                   <BoltIcon size={22} />
                 </span>
                 <div className="min-w-0">
-                  <p className="text-[13px] font-medium text-gw-cream/90">
+                  <p className="text-[13px] font-medium text-gw-text-glass-muted">
                     Total Daya
                   </p>
                   <p
                     className={`font-serif-display tabular-nums mt-0.5 whitespace-nowrap text-[24px] leading-tight sm:text-[31px] ${
-                      isOverTotalThreshold ? "text-[#B83220]" : "text-gw-cream"
+                      isOverTotalThreshold
+                        ? "text-[#B83220]"
+                        : "text-gw-text-glass"
                     }`}
                   >
                     {formatWatts(totalPowerW)}
@@ -235,10 +237,10 @@ export default function DashboardPage() {
                   <LayersIcon size={22} />
                 </span>
                 <div className="min-w-0">
-                  <p className="text-[13px] font-medium text-gw-cream/90">
+                  <p className="text-[13px] font-medium text-gw-text-glass-muted">
                     Energi Hari Ini
                   </p>
-                  <p className="font-serif-display tabular-nums mt-0.5 whitespace-nowrap text-[23px] leading-tight text-gw-cream sm:text-[30px]">
+                  <p className="font-serif-display tabular-nums mt-0.5 whitespace-nowrap text-[23px] leading-tight text-gw-text-glass sm:text-[30px]">
                     {formatKwh(todayEnergyKwh)}
                   </p>
                 </div>
@@ -257,10 +259,10 @@ export default function DashboardPage() {
                   <LeafOutlineIcon size={22} />
                 </span>
                 <div className="min-w-0">
-                  <p className="text-[13px] font-medium text-gw-cream/90">
+                  <p className="text-[13px] font-medium text-gw-text-glass-muted">
                     Estimasi Biaya
                   </p>
-                  <p className="font-serif-display tabular-nums mt-0.5 whitespace-nowrap text-[23px] leading-tight text-gw-cream sm:text-[30px]">
+                  <p className="font-serif-display tabular-nums mt-0.5 whitespace-nowrap text-[23px] leading-tight text-gw-text-glass sm:text-[30px]">
                     {formatRupiah(estimatedCostRp)}
                   </p>
                 </div>
@@ -279,10 +281,10 @@ export default function DashboardPage() {
                   <PlugIcon size={22} />
                 </span>
                 <div className="min-w-0">
-                  <p className="text-[13px] font-medium text-gw-cream/90">
+                  <p className="text-[13px] font-medium text-gw-text-glass-muted">
                     Kanal Aktif
                   </p>
-                  <p className="font-serif-display tabular-nums mt-0.5 whitespace-nowrap text-[24px] leading-tight text-gw-cream sm:text-[31px]">
+                  <p className="font-serif-display tabular-nums mt-0.5 whitespace-nowrap text-[24px] leading-tight text-gw-text-glass sm:text-[31px]">
                     {activeChannelsCount} / {channels.length}
                   </p>
                 </div>
@@ -312,13 +314,13 @@ export default function DashboardPage() {
               <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-[#F7F5EF]/70 text-[#35462F]">
                 <LayersIcon size={18} />
               </span>
-              <h2 className="font-serif-display text-[21px] text-gw-cream/90 sm:text-[24px]">
+              <h2 className="font-serif-display text-[21px] text-gw-text-glass sm:text-[24px]">
                 Kontrol Kanal
               </h2>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-[13px] font-medium text-gw-cream/90">
+              <span className="text-[13px] font-medium text-gw-text-glass-muted">
                 Kelola Semua
               </span>
               <ToggleSwitch
@@ -357,10 +359,10 @@ export default function DashboardPage() {
                       <ChannelTypeIcon kind={ch.icon} size={18} />
                     </span>
                     <div className="min-w-0">
-                      <p className="truncate text-[14px] font-semibold text-[#242821]">
+                      <p className="truncate text-[14px] font-semibold text-gw-text-card">
                         Kanal {ch.id} - {ch.name}
                       </p>
-                      <p className="truncate text-[12px] text-[#5E655A]">
+                      <p className="truncate text-[12px] text-gw-text-muted">
                         {ch.commandMessage
                           ? ch.commandMessage
                           : ch.relayOn
@@ -415,7 +417,7 @@ export default function DashboardPage() {
           <div className="mb-2.5 flex min-h-[26px] items-center justify-between gap-2">
             <div className="flex items-center gap-2.5">
               <ClockIcon size={32} className="text-[#526B42]" />
-              <h2 className="text-[16px] font-semibold tracking-tight text-[#242821]">
+              <h2 className="text-[16px] font-semibold tracking-tight text-gw-text-card">
                 Aktivitas Terakhir
               </h2>
             </div>

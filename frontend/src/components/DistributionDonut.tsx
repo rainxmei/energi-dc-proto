@@ -51,7 +51,7 @@ export const DistributionDonut = React.memo(function DistributionDonut({
     >
       <div className="mb-2.5 flex min-h-[26px] items-center gap-2.5">
         <LayersIcon size={32} className="text-[#526B42]" />
-        <h2 className="text-[16px] font-semibold tracking-tight text-[#242821]">
+        <h2 className="text-[16px] font-semibold tracking-tight text-gw-text-card">
           Distribusi Penggunaan
         </h2>
       </div>

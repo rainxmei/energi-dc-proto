@@ -40,13 +40,13 @@ export default function AlertsPage() {
   return (
     <div className="space-y-4 sm:space-y-5">
       <div>
-        <p className="text-[11px] font-semibold tracking-[0.16em] text-[#35462F] uppercase">
+        <p className="text-[11px] font-semibold tracking-[0.16em] text-gw-text-header-muted uppercase">
           PERINGATAN & NOTIFIKASI
         </p>
-        <h1 className="font-serif-display mt-0.5 text-[28px] leading-tight text-[#242821] sm:text-[36px]">
+        <h1 className="font-serif-display mt-0.5 text-[28px] leading-tight text-gw-text-header sm:text-[36px]">
           Pusat Peringatan Daya
         </h1>
-        <p className="mt-1 text-[14px] text-[#35462F]">
+        <p className="mt-1 text-[14px] text-gw-text-header-muted">
           Notifikasi otomatis aktif saat total daya melebihi{" "}
           <strong>{formatWatts(settings.totalThresholdW)}</strong> atau batas
           tiap kanal terlampaui.

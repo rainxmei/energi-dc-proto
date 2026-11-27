@@ -39,13 +39,13 @@ export default function SettingsPage() {
   return (
     <div className="space-y-4 sm:space-y-5">
       <div>
-        <p className="text-[11px] font-semibold tracking-[0.16em] text-[#35462F] uppercase">
+        <p className="text-[11px] font-semibold tracking-[0.16em] text-gw-text-header-muted uppercase">
           PENGATURAN
         </p>
-        <h1 className="font-serif-display mt-0.5 text-[28px] leading-tight text-[#242821] sm:text-[36px]">
+        <h1 className="font-serif-display mt-0.5 text-[28px] leading-tight text-gw-text-header sm:text-[36px]">
           Batas Daya, Notifikasi & PWA
         </h1>
-        <p className="mt-1 text-[14px] text-[#35462F]">
+        <p className="mt-1 text-[14px] text-gw-text-header-muted">
           Sesuaikan ambang peringatan daya, nama kanal, tarif estimasi, dan
           sumber data backend.
         </p>
@@ -327,14 +327,24 @@ export default function SettingsPage() {
               </p>
             </div>
           </div>
+        </section>
 
-          <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-[#35462F]/10 pt-4">
-            <div className="flex flex-wrap gap-2.5">
+        {/* Dedicated Save / Action Bubble for All Settings */}
+        <section
+          aria-label="Simpan seluruh pengaturan"
+          className="gw-glass-readable p-4 sm:px-6 sm:py-5"
+        >
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-[13px] text-[#5E655A]">
+              Simpan semua perubahan batas daya, label kanal, sumber data, dan
+              tarif estimasi sekaligus.
+            </p>
+            <div className="flex flex-wrap items-center gap-2.5 sm:shrink-0">
               <button
                 type="submit"
                 className="min-h-[44px] rounded-full bg-[#526B42] px-6 text-[14px] font-semibold text-[#F7F5EF] transition-opacity hover:opacity-95"
               >
-                Simpan Pengaturan
+                Simpan Semua Pengaturan
               </button>
               <button
                 type="button"
@@ -343,15 +353,14 @@ export default function SettingsPage() {
               >
                 Segarkan Data
               </button>
+              <button
+                type="button"
+                onClick={resetSettings}
+                className="min-h-[44px] rounded-full px-4 text-[13px] font-semibold text-[#8E2618] hover:bg-[#F9E3DE]"
+              >
+                Reset Default
+              </button>
             </div>
-
-            <button
-              type="button"
-              onClick={resetSettings}
-              className="min-h-[44px] rounded-full px-4 text-[13px] font-semibold text-[#8E2618] hover:bg-[#F9E3DE]"
-            >
-              Reset Default
-            </button>
           </div>
 
           {savedBanner && (
@@ -359,7 +368,7 @@ export default function SettingsPage() {
               role="status"
               className="mt-3 rounded-xl bg-[#E3E9DA] px-3.5 py-2 text-[13px] font-medium text-[#35462F]"
             >
-              Pengaturan berhasil disimpan. Batas total aktif:{" "}
+              Seluruh pengaturan berhasil disimpan. Batas total aktif:{" "}
               {formatWatts(form.totalThresholdW)}.
             </p>
           )}

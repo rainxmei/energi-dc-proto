@@ -62,13 +62,13 @@ export default function HistoryPage() {
     <div className="space-y-4 sm:space-y-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-[11px] font-semibold tracking-[0.16em] text-[#35462F] uppercase">
+          <p className="text-[11px] font-semibold tracking-[0.16em] text-gw-text-header-muted uppercase">
             RIWAYAT ENERGI
           </p>
-          <h1 className="font-serif-display mt-0.5 text-[28px] leading-tight text-[#242821] sm:text-[36px]">
+          <h1 className="font-serif-display mt-0.5 text-[28px] leading-tight text-gw-text-header sm:text-[36px]">
             Grafik & Log Pengukuran
           </h1>
-          <p className="mt-1 text-[14px] text-[#35462F]">
+          <p className="mt-1 text-[14px] text-gw-text-header-muted">
             Telusuri riwayat konsumsi daya dan aktivitas relay dalam zona waktu
             WIB.
           </p>

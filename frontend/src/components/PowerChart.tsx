@@ -52,10 +52,10 @@ export const PowerChart = React.memo(function PowerChart({
     >
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-[#F7F5EF]/70 text-[#35462F]">
-            <ChartBarIcon size={18} />
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl text-gw-text-glass">
+            <ChartBarIcon size={32} />
           </span>
-          <h2 className="font-serif-display text-[21px] leading-tight text-[#242821] sm:text-[24px]">
+          <h2 className="font-serif-display text-[21px] leading-tight text-gw-text-glass sm:text-[24px]">
             {title}
           </h2>
         </div>

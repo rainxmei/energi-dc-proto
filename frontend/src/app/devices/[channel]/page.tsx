@@ -89,10 +89,10 @@ export default function ChannelDetailPage() {
               <ChannelTypeIcon kind={channel.icon} size={22} />
             </span>
             <div>
-              <p className="text-[11px] font-semibold tracking-[0.16em] text-[#5E655A] uppercase">
+              <p className="text-[11px] font-semibold tracking-[0.16em] text-gw-text-header-muted uppercase">
                 KANAL {channel.id}
               </p>
-              <h1 className="font-serif-display text-[28px] leading-tight text-[#242821] sm:text-[34px]">
+              <h1 className="font-serif-display text-[28px] leading-tight text-gw-text-header sm:text-[34px]">
                 {channel.name}
               </h1>
             </div>
