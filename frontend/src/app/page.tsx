@@ -330,7 +330,7 @@ export default function DashboardPage() {
 
         <section
           aria-label="Kontrol Kanal"
-          className="gw-glass flex flex-col justify-between p-5 sm:p-6 xl:col-span-5"
+          className="gw-glass-kpi flex flex-col justify-between p-5 sm:p-6 xl:col-span-5"
         >
           <div className="mb-4 flex items-center justify-between gap-2">
             <div className="flex items-center gap-2.5">
@@ -349,9 +349,7 @@ export default function DashboardPage() {
               <ToggleSwitch
                 checked={allOn}
                 disabled={controlLocked}
-                label={
-                  allOn ? "Matikan semua kanal" : "Nyalakan semua kanal"
-                }
+                label={allOn ? "Matikan semua kanal" : "Nyalakan semua kanal"}
                 onChange={() => void toggleAllChannels(!allOn)}
               />
             </div>

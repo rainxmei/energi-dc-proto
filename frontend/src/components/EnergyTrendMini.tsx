@@ -17,7 +17,7 @@ const MINI_BARS = [
   { label: "Jum", h: 62 },
 ];
 
-export function EnergyTrendMini({
+export const EnergyTrendMini = React.memo(function EnergyTrendMini({
   todayKwh,
   yesterdayKwh,
 }: EnergyTrendMiniProps) {
@@ -85,4 +85,4 @@ export function EnergyTrendMini({
       </div>
     </section>
   );
-}
+});

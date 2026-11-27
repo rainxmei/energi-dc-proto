@@ -30,7 +30,7 @@ const RANGE_OPTIONS: Array<{ value: TimeRange; label: string }> = [
   { value: "30d", label: "30 Hari" },
 ];
 
-export function PowerChart({
+export const PowerChart = React.memo(function PowerChart({
   data,
   timeRange,
   onRangeChange,
@@ -48,7 +48,7 @@ export function PowerChart({
   return (
     <section
       aria-label={title}
-      className="gw-glass-kpi flex flex-col justify-between p-5 sm:p-6"
+      className="gw-glass-kpi flex h-full flex-col justify-between p-5 sm:p-6"
     >
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
@@ -97,8 +97,13 @@ export function PowerChart({
           </p>
         </div>
       ) : (
-        <div className="w-full" style={{ height }}>
-          <ResponsiveContainer width="100%" height="100%">
+        <div className="w-full flex-1" style={{ minHeight: height }}>
+          <ResponsiveContainer
+            width="100%"
+            height="100%"
+            minHeight={height}
+            debounce={60}
+          >
             <AreaChart
               data={data}
               margin={{ top: 14, right: 12, left: -12, bottom: 4 }}
@@ -190,4 +195,4 @@ export function PowerChart({
       )}
     </section>
   );
-}
+});

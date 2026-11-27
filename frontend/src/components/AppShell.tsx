@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useGridWatch } from "@/context/GridWatchContext";
+import { useGridWatchShell } from "@/context/GridWatchContext";
 import {
   ArrowRightIcon,
   BellIcon,
@@ -36,7 +36,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     dismissToast,
     canInstallPwa,
     promptInstallPwa,
-  } = useGridWatch();
+  } = useGridWatchShell();
 
   const isNavActive = (href: string) => {
     if (href === "/") return pathname === "/";
@@ -45,15 +45,19 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="relative min-h-[100dvh] w-full">
-      {/* Persistent Interior Backdrop */}
-      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+      {/* Persistent Interior Backdrop (GPU-promoted static layer) */}
+      <div
+        className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
+        style={{ transform: "translateZ(0)" }}
+      >
         <img
-          src="/images/bg-interior.png"
+          src="/images/bg-interior.jpg"
           alt=""
-          width={1536}
-          height={1024}
+          width={1600}
+          height={900}
+          decoding="async"
           fetchPriority="high"
-          className="h-full w-full scale-105 object-cover object-center blur-[2px] md:blur-none"
+          className="h-full w-full object-cover object-center"
         />
         <div
           className="absolute inset-0 md:hidden"
@@ -144,6 +148,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   <Link
                     key={item.href}
                     href={item.href}
+                    prefetch={true}
                     aria-current={active ? "page" : undefined}
                     className={`flex min-h-[48px] items-center justify-between rounded-[16px] px-4 text-[15px] transition-colors duration-200 ${
                       active
@@ -173,7 +178,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
 
           {/* Bottom Sidebar Action Card */}
-          <div className="mb-14 rounded-[20px] border border-white/28 bg-[#8A9A78]/35 p-4 text-[#F7F5EF] backdrop-blur-md">
+          <div className="mb-14 rounded-[20px] border border-white/28 bg-[#8A9A78]/40 p-4 text-[#F7F5EF]">
             <p className="text-[13px] leading-relaxed text-[#F7F5EF]/95">
               {canInstallPwa
                 ? "Pasang GridWatch ke layar utama untuk akses cepat seperti aplikasi."
@@ -207,12 +212,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
         {/* Foreground Botanical Leaf Overlay (z-index higher than sidebar z-10) */}
         <img
-          src="/images/daun-kiri-dashboard.png"
+          src="/images/daun-kiri-opt.png"
           alt=""
-          width={320}
-          height={320}
+          width={260}
+          height={260}
+          decoding="async"
           aria-hidden="true"
-          className="pointer-events-none fixed bottom-0 left-0 z-30 hidden w-[230px] select-none object-contain drop-shadow-[0_10px_22px_rgba(31,41,26,0.16)] lg:block xl:w-[260px]"
+          className="pointer-events-none fixed bottom-0 left-0 z-30 hidden w-[230px] select-none object-contain lg:block xl:w-[260px]"
         />
 
         {/* Main Content Column */}
@@ -301,6 +307,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <li key={item.href}>
                 <Link
                   href={item.href}
+                  prefetch={true}
                   aria-current={active ? "page" : undefined}
                   className={`relative flex min-h-[54px] flex-col items-center justify-center gap-1 rounded-[18px] px-1 text-[11px] font-medium transition-colors ${
                     active

@@ -1,10 +1,11 @@
-const CACHE_NAME = "gridwatch-shell-v1";
+const CACHE_NAME = "gridwatch-shell-v2";
 const OFFLINE_URL = "/offline";
 const PRECACHE_ASSETS = [
   "/",
   "/offline",
   "/manifest.webmanifest",
-  "/images/bg-interior.png",
+  "/images/bg-interior.jpg",
+  "/images/daun-kiri-opt.png",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
   "/icons/icon.svg",
@@ -40,45 +41,46 @@ self.addEventListener("fetch", (event) => {
 
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
-  if (url.pathname.startsWith("/api/")) return;
+
+  // Bypass API calls, Next.js RSC client transitions, and hot-reload endpoints for zero navigation overhead
+  if (
+    url.pathname.startsWith("/api/") ||
+    url.searchParams.has("_rsc") ||
+    request.headers.get("RSC") === "1" ||
+    url.pathname.startsWith("/_next/webpack-hmr")
+  ) {
+    return;
+  }
 
   if (request.mode === "navigate") {
     event.respondWith(
-      fetch(request)
-        .then((response) => {
+      fetch(request).catch(async () => {
+        const cached = await caches.match(request);
+        return cached || (await caches.match(OFFLINE_URL));
+      })
+    );
+    return;
+  }
+
+  // Only cache static media and immutable build chunks
+  if (
+    url.pathname.startsWith("/images/") ||
+    url.pathname.startsWith("/icons/") ||
+    url.pathname.startsWith("/_next/static/")
+  ) {
+    event.respondWith(
+      caches.match(request).then((cached) => {
+        if (cached) return cached;
+        return fetch(request).then((response) => {
           if (response.ok) {
             const copy = response.clone();
             caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
           }
           return response;
-        })
-        .catch(async () => {
-          const cached = await caches.match(request);
-          return cached || (await caches.match(OFFLINE_URL));
-        })
+        });
+      })
     );
-    return;
   }
-
-  event.respondWith(
-    caches.match(request).then((cached) => {
-      if (cached) return cached;
-      return fetch(request)
-        .then((response) => {
-          if (
-            response.ok &&
-            (url.pathname.startsWith("/images/") ||
-              url.pathname.startsWith("/icons/") ||
-              url.pathname.startsWith("/_next/static/"))
-          ) {
-            const copy = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
-          }
-          return response;
-        })
-        .catch(() => cached);
-    })
-  );
 });
 
 self.addEventListener("notificationclick", (event) => {

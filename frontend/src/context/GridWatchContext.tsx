@@ -88,11 +88,25 @@ interface GridWatchContextValue {
   refreshNow: () => Promise<void>;
 }
 
+interface GridWatchShellContextValue {
+  unreadAlertsCount: number;
+  connectionState: ConnectionState;
+  isSimulation: boolean;
+  isBrowserOffline: boolean;
+  toasts: ToastItem[];
+  dismissToast: (id: string) => void;
+  canInstallPwa: boolean;
+  promptInstallPwa: () => Promise<void>;
+}
+
 const GridWatchContext = createContext<GridWatchContextValue | null>(null);
+const GridWatchShellContext = createContext<GridWatchShellContextValue | null>(
+  null
+);
 
 export function GridWatchProvider({ children }: { children: React.ReactNode }) {
   const [isHydrated, setIsHydrated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading] = useState(false);
   const [settings, setSettings] = useState<GridWatchSettings>(DEFAULT_SETTINGS);
   const [connectionState, setConnectionState] =
     useState<ConnectionState>("simulation");
@@ -223,7 +237,6 @@ export function GridWatchProvider({ children }: { children: React.ReactNode }) {
     window.addEventListener("appinstalled", onInstalled);
 
     setIsHydrated(true);
-    setIsLoading(false);
 
     return () => {
       window.removeEventListener("online", onOnline);
@@ -740,51 +753,127 @@ export function GridWatchProvider({ children }: { children: React.ReactNode }) {
     [alerts]
   );
 
-  const value: GridWatchContextValue = {
-    isHydrated,
-    isLoading,
-    connectionState,
-    isSimulation,
-    isBrowserOffline,
-    lastSyncedAt,
-    deviceStatus,
-    channels,
-    totalPowerW,
-    activeChannelsCount,
-    todayEnergyKwh,
-    yesterdayEnergyKwh: 2.82,
-    estimatedCostRp,
-    timeRange,
-    setTimeRange,
-    chartSeries,
-    alerts,
-    unreadAlertsCount,
-    activities,
-    toasts,
-    dismissToast,
-    settings,
-    updateSettings,
-    resetSettings,
-    toggleChannel,
-    toggleAllChannels,
-    resolveAlert,
-    clearResolvedAlerts,
-    notificationPermission,
-    enableNotifications,
-    sendTestNotification,
-    spikeActive,
-    triggerPowerSpike,
-    canInstallPwa: Boolean(deferredInstallPrompt) && !isPwaInstalled,
-    isPwaInstalled,
-    promptInstallPwa,
-    refreshNow: pollOnce,
-  };
+  const canInstallPwa = Boolean(deferredInstallPrompt) && !isPwaInstalled;
+
+  const shellValue = useMemo<GridWatchShellContextValue>(
+    () => ({
+      unreadAlertsCount,
+      connectionState,
+      isSimulation,
+      isBrowserOffline,
+      toasts,
+      dismissToast,
+      canInstallPwa,
+      promptInstallPwa,
+    }),
+    [
+      canInstallPwa,
+      connectionState,
+      dismissToast,
+      isBrowserOffline,
+      isSimulation,
+      promptInstallPwa,
+      toasts,
+      unreadAlertsCount,
+    ]
+  );
+
+  const value = useMemo<GridWatchContextValue>(
+    () => ({
+      isHydrated,
+      isLoading,
+      connectionState,
+      isSimulation,
+      isBrowserOffline,
+      lastSyncedAt,
+      deviceStatus,
+      channels,
+      totalPowerW,
+      activeChannelsCount,
+      todayEnergyKwh,
+      yesterdayEnergyKwh: 2.82,
+      estimatedCostRp,
+      timeRange,
+      setTimeRange,
+      chartSeries,
+      alerts,
+      unreadAlertsCount,
+      activities,
+      toasts,
+      dismissToast,
+      settings,
+      updateSettings,
+      resetSettings,
+      toggleChannel,
+      toggleAllChannels,
+      resolveAlert,
+      clearResolvedAlerts,
+      notificationPermission,
+      enableNotifications,
+      sendTestNotification,
+      spikeActive,
+      triggerPowerSpike,
+      canInstallPwa,
+      isPwaInstalled,
+      promptInstallPwa,
+      refreshNow: pollOnce,
+    }),
+    [
+      activeChannelsCount,
+      activities,
+      alerts,
+      canInstallPwa,
+      channels,
+      chartSeries,
+      clearResolvedAlerts,
+      connectionState,
+      deviceStatus,
+      dismissToast,
+      enableNotifications,
+      estimatedCostRp,
+      isBrowserOffline,
+      isHydrated,
+      isLoading,
+      isPwaInstalled,
+      isSimulation,
+      lastSyncedAt,
+      notificationPermission,
+      pollOnce,
+      promptInstallPwa,
+      resetSettings,
+      resolveAlert,
+      sendTestNotification,
+      settings,
+      spikeActive,
+      timeRange,
+       toasts,
+      todayEnergyKwh,
+      toggleAllChannels,
+      toggleChannel,
+      totalPowerW,
+      triggerPowerSpike,
+      unreadAlertsCount,
+      updateSettings,
+    ]
+  );
 
   return (
-    <GridWatchContext.Provider value={value}>
-      {children}
-    </GridWatchContext.Provider>
+    <GridWatchShellContext.Provider value={shellValue}>
+      <GridWatchContext.Provider value={value}>
+        {children}
+      </GridWatchContext.Provider>
+    </GridWatchShellContext.Provider>
   );
+}
+
+export function useGridWatchShell() {
+  const ctx = useContext(GridWatchShellContext);
+  if (!ctx) {
+    throw new Error(
+      "useGridWatchShell must be used inside GridWatchProvider"
+    );
+  }
+  return ctx;
 }
 
 export function useGridWatch() {

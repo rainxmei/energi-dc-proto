@@ -13,7 +13,7 @@ interface DistributionDonutProps {
   totalPowerW: number | null;
 }
 
-export function DistributionDonut({
+export const DistributionDonut = React.memo(function DistributionDonut({
   channels,
   totalPowerW,
 }: DistributionDonutProps) {
@@ -112,4 +112,4 @@ export function DistributionDonut({
       </div>
     </section>
   );
-}
+});

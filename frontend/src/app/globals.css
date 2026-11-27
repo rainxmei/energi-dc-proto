@@ -22,14 +22,19 @@
   /* Sidebar kiri desktop */
   --gw-glass: rgba(247, 245, 239, 0.50);
   /* Card utama (Grafik & Kontrol Kanal) */
-  --gw-glass-kpi: rgba(244, 255, 220, 0.1);
+  --gw-glass-kpi: rgba(255, 245, 228, 0.3);
   /* 4 Card KPI atas */
   --gw-glass-strong: rgba(247, 245, 239, 0.40);
   /* Card bawah (Distribusi, Tren, Aktivitas) & halaman detail */
   --gw-glass-row: rgba(247, 245, 239, 0.22);
   /* Baris kanal di dalam card Kontrol Kanal */
   --gw-glass-border: rgba(255, 255, 255, 0.52);
-  --gw-glass-shadow: 0 16px 40px rgba(39, 49, 33, 0.12);
+  --gw-glass-shadow: 0 12px 28px rgba(39, 49, 33, 0.1);
+
+  /* Tingkat blur kaca (dioptimasi untuk performa GPU mulus 60fps) */
+  --gw-blur-sidebar: 12px;
+  --gw-blur-card: 10px;
+  --gw-blur-kpi: 8px;
 
   --gw-card-radius: 24px;
   --gw-inner-radius: 16px;
@@ -84,13 +89,14 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* Frosted surfaces tuned for contrast over the warm interior backdrop */
+/* Frosted surfaces tuned for contrast and low GPU overdraw */
 .gw-sidebar {
   background: var(--gw-sidebar-bg);
   border: 1px solid rgba(255, 255, 255, 0.36);
-  box-shadow: 0 18px 42px rgba(31, 41, 26, 0.14);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 14px 32px rgba(31, 41, 26, 0.12);
+  backdrop-filter: blur(var(--gw-blur-sidebar));
+  -webkit-backdrop-filter: blur(var(--gw-blur-sidebar));
+  transform: translateZ(0);
 }
 
 .gw-glass {
@@ -98,26 +104,26 @@
   border: 1px solid var(--gw-glass-border);
   border-radius: var(--gw-card-radius);
   box-shadow: var(--gw-glass-shadow);
-  backdrop-filter: blur(22px);
-  -webkit-backdrop-filter: blur(22px);
+  backdrop-filter: blur(var(--gw-blur-card));
+  -webkit-backdrop-filter: blur(var(--gw-blur-card));
 }
 
 .gw-glass-kpi {
   background: var(--gw-glass-kpi);
   border: 1px solid var(--gw-glass-border);
   border-radius: var(--gw-card-radius);
-  box-shadow: 0 12px 32px rgba(39, 49, 33, 0.1);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 10px 24px rgba(39, 49, 33, 0.08);
+  backdrop-filter: blur(var(--gw-blur-kpi));
+  -webkit-backdrop-filter: blur(var(--gw-blur-kpi));
 }
 
 .gw-glass-readable {
   background: var(--gw-glass-strong);
   border: 1px solid rgba(255, 255, 255, 0.65);
   border-radius: var(--gw-card-radius);
-  box-shadow: 0 14px 36px rgba(39, 49, 33, 0.1);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 10px 26px rgba(39, 49, 33, 0.08);
+  backdrop-filter: blur(var(--gw-blur-card));
+  -webkit-backdrop-filter: blur(var(--gw-blur-card));
 }
 
 .gw-inner-row {
@@ -127,11 +133,9 @@
 }
 
 .gw-pill-glass {
-  background: rgba(247, 245, 239, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.58);
+  background: rgba(247, 245, 239, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.62);
   border-radius: var(--gw-pill-radius);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
 }
 
 @supports not (backdrop-filter: blur(1px)) {
