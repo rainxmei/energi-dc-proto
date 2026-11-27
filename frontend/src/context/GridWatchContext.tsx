@@ -210,9 +210,23 @@ export function GridWatchProvider({ children }: { children: React.ReactNode }) {
     setIsPwaInstalled(standalone);
 
     if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/sw.js").catch(() => {
-        // SW registration can fail on non-HTTPS non-localhost origins
-      });
+      if (process.env.NODE_ENV === "production") {
+        navigator.serviceWorker.register("/sw.js").catch(() => {
+          // SW registration can fail on non-HTTPS non-localhost origins
+        });
+      } else {
+        // In next dev, unregister any stale SW and purge its caches so F5 never serves old JS/CSS
+        navigator.serviceWorker
+          .getRegistrations()
+          .then((regs) => Promise.all(regs.map((r) => r.unregister())))
+          .catch(() => {});
+        if ("caches" in window) {
+          caches
+            .keys()
+            .then((keys) => Promise.all(keys.map((k) => caches.delete(k))))
+            .catch(() => {});
+        }
+      }
     }
 
     const onOnline = () => setIsBrowserOffline(false);

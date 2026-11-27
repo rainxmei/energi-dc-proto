@@ -1,7 +1,6 @@
-const CACHE_NAME = "gridwatch-shell-v2";
+const CACHE_NAME = "gridwatch-shell-v4";
 const OFFLINE_URL = "/offline";
 const PRECACHE_ASSETS = [
-  "/",
   "/offline",
   "/manifest.webmanifest",
   "/images/bg-interior.jpg",
@@ -62,11 +61,10 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Only cache static media and immutable build chunks
+  // Only cache static media assets; let Next.js / browser HTTP cache handle /_next/static chunks
   if (
     url.pathname.startsWith("/images/") ||
-    url.pathname.startsWith("/icons/") ||
-    url.pathname.startsWith("/_next/static/")
+    url.pathname.startsWith("/icons/")
   ) {
     event.respondWith(
       caches.match(request).then((cached) => {

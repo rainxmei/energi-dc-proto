@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+@theme inline {
+  --color-gw-sage: var(--gw-sage);
+  --color-gw-cream: var(--gw-cream);
+  --color-gw-red: var(--gw-red);
+  --color-gw-blue: var(--gw-blue);
+  --color-gw-yellow: var(--gw-yellow);
+  --color-gw-forest: var(--gw-forest);
+  --color-gw-deep-olive: var(--gw-deep-olive);
+  --color-gw-ink: var(--gw-ink);
+  --color-gw-muted: var(--gw-muted);
+}
+
 :root {
   --gw-sage: #9caf88;
   --gw-cream: #f7f5ef;
@@ -20,21 +32,24 @@
   /* Atur tingkat transparansi panel/card di sini (angka terakhir = opacity 0.0 - 1.0) */
   --gw-sidebar-bg: rgba(104, 118, 92, 0.34);
   /* Sidebar kiri desktop */
-  --gw-glass: rgba(247, 245, 239, 0.50);
+  --gw-glass: rgba(203, 196, 176, 0.5);
   /* Card utama (Grafik & Kontrol Kanal) */
-  --gw-glass-kpi: rgba(255, 245, 228, 0.3);
+  --gw-glass-kpi: rgba(209, 201, 185, 0.3);
   /* 4 Card KPI atas */
-  --gw-glass-strong: rgba(247, 245, 239, 0.40);
+  --gw-glass-strong: rgba(247, 245, 239, 0.403);
   /* Card bawah (Distribusi, Tren, Aktivitas) & halaman detail */
   --gw-glass-row: rgba(247, 245, 239, 0.22);
   /* Baris kanal di dalam card Kontrol Kanal */
-  --gw-glass-border: rgba(255, 255, 255, 0.52);
+  --gw-glass-border: rgba(255, 255, 255, 0.0);
   --gw-glass-shadow: 0 12px 28px rgba(39, 49, 33, 0.1);
 
-  /* Tingkat blur kaca (dioptimasi untuk performa GPU mulus 60fps) */
-  --gw-blur-sidebar: 12px;
-  --gw-blur-card: 10px;
-  --gw-blur-kpi: 8px;
+  /* Tingkat blur kaca ringan (dipadukan specular sheen agar terasa frosted tapi tetap 60fps) */
+  --gw-blur-sidebar: 10px;
+  --gw-blur-card: 8px;
+  --gw-blur-kpi: 6px;
+
+  --gw-glass-inset: inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    inset 1px 0 0 rgba(255, 255, 255, 0.36);
 
   --gw-card-radius: 24px;
   --gw-inner-radius: 16px;
@@ -89,53 +104,95 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* Frosted surfaces tuned for contrast and low GPU overdraw */
+/* Frosted surfaces: specular border + diagonal sheen + lightweight blur */
 .gw-sidebar {
-  background: var(--gw-sidebar-bg);
-  border: 1px solid rgba(255, 255, 255, 0.36);
-  box-shadow: 0 14px 32px rgba(31, 41, 26, 0.12);
+  background-color: var(--gw-sidebar-bg);
+  background-image: linear-gradient(160deg,
+      rgba(255, 255, 255, 0.16) 0%,
+      rgba(255, 255, 255, 0.02) 55%,
+      rgba(255, 255, 255, 0.08) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.48),
+    inset 1px 0 0 rgba(255, 255, 255, 0.2),
+    0 14px 32px rgba(31, 41, 26, 0.12);
   backdrop-filter: blur(var(--gw-blur-sidebar));
   -webkit-backdrop-filter: blur(var(--gw-blur-sidebar));
   transform: translateZ(0);
 }
 
 .gw-glass {
-  background: var(--gw-glass);
-  border: 1px solid var(--gw-glass-border);
+  background-color: var(--gw-glass);
+  background-image: var(--gw-glass-sheen);
+  border: 1px solid rgba(255, 255, 255, 0.58);
   border-radius: var(--gw-card-radius);
-  box-shadow: var(--gw-glass-shadow);
+  box-shadow: var(--gw-glass-inset), var(--gw-glass-shadow);
   backdrop-filter: blur(var(--gw-blur-card));
   -webkit-backdrop-filter: blur(var(--gw-blur-card));
 }
 
 .gw-glass-kpi {
-  background: var(--gw-glass-kpi);
-  border: 1px solid var(--gw-glass-border);
+  background-color: var(--gw-glass-kpi);
+  background-image: var(--gw-glass-sheen);
+  border: 1px solid rgba(255, 255, 255, 0.56);
   border-radius: var(--gw-card-radius);
-  box-shadow: 0 10px 24px rgba(39, 49, 33, 0.08);
+  box-shadow:
+    var(--gw-glass-inset),
+    0 10px 24px rgba(39, 49, 33, 0.08);
   backdrop-filter: blur(var(--gw-blur-kpi));
   -webkit-backdrop-filter: blur(var(--gw-blur-kpi));
 }
 
 .gw-glass-readable {
-  background: var(--gw-glass-strong);
+  background-color: var(--gw-glass-strong);
+  background-image: var(--gw-glass-sheen);
   border: 1px solid rgba(255, 255, 255, 0.65);
   border-radius: var(--gw-card-radius);
-  box-shadow: 0 10px 26px rgba(39, 49, 33, 0.08);
+  box-shadow:
+    var(--gw-glass-inset),
+    0 10px 26px rgba(39, 49, 33, 0.08);
   backdrop-filter: blur(var(--gw-blur-card));
   -webkit-backdrop-filter: blur(var(--gw-blur-card));
 }
 
 .gw-inner-row {
-  background: var(--gw-glass-row);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  background-color: var(--gw-glass-row);
+  background-image: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.28) 0%,
+      rgba(255, 255, 255, 0.06) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.62);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
   border-radius: var(--gw-inner-radius);
 }
 
 .gw-pill-glass {
-  background: rgba(247, 245, 239, 0.78);
-  border: 1px solid rgba(255, 255, 255, 0.62);
+  background-color: rgba(247, 245, 239, 0.72);
+  background-image: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.36) 0%,
+      rgba(247, 245, 239, 0.14) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 6px 16px rgba(39, 49, 33, 0.06);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-radius: var(--gw-pill-radius);
+}
+
+.gw-pill-date {
+  background-color: rgba(217, 197, 165, 0.147);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 4px 6px 8px rgba(39, 49, 33, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--gw-pill-radius);
+}
+
+.gw-pill-bell {
+  background-color: rgba(252, 244, 218, 0.334);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 4px 6px 8px rgba(39, 49, 33, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
 }
 
 @supports not (backdrop-filter: blur(1px)) {
@@ -154,9 +211,6 @@
 
 @media (max-width: 767px) {
   :root {
-    --gw-glass: rgba(247, 245, 239, 0.72);
-    --gw-glass-kpi: rgba(247, 245, 239, 0.74);
-    --gw-glass-strong: rgba(247, 245, 239, 0.88);
     --gw-card-radius: 20px;
   }
 }

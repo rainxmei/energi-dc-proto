@@ -55,8 +55,8 @@ export default function AlertsPage() {
 
       {/* PWA Notification & Live Demo Controls */}
       <section className="gw-glass-readable p-5">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div className="flex items-start gap-3">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+          <div className="flex min-w-0 items-start gap-3">
             <span
               className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${
                 notificationPermission === "granted"

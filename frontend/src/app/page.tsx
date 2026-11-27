@@ -64,49 +64,33 @@ export default function DashboardPage() {
   return (
     <div className="space-y-4 sm:space-y-5">
       {/* Editorial Dashboard Header */}
-      <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-        <div>
-          <p className="text-[11px] font-semibold tracking-[0.16em] text-[#35462F] uppercase">
+      <div className="flex flex-col gap-3 xl:flex-row xl:items-end xl:justify-between">
+        <div className="min-w-0">
+          <p className="text-[11px] font-semibold tracking-[0.16em] text-gw-cream uppercase">
             DASHBOARD
           </p>
-          <h1 className="font-serif-display mt-0.5 text-[30px] leading-tight text-[#242821] sm:text-[40px]">
+          <h1 className="font-serif-display mt-0.5 text-[30px] leading-tight text-gw-cream sm:text-[38px] xl:text-[42px]">
             Halo, <em className="italic">Rumah Modern</em>
           </h1>
-          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[14px] text-[#35462F]">
+          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[14px] text-gw-cream/90">
             <span>Pantau penggunaan energi rumah Anda secara real-time.</span>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F7F5EF]/75 px-2.5 py-0.5 text-[12px] font-medium text-[#35462F]">
-              <span
-                className={`h-2 w-2 rounded-full ${
-                  connectionState === "online"
-                    ? "bg-[#526B42]"
-                    : isSimulation
-                      ? "bg-[#7FA8B8]"
-                      : "bg-[#D7B36A]"
-                }`}
-              />
-              {isSimulation
-                ? "Mode Simulasi"
-                : connectionState === "online"
-                  ? `Online · ${formatTimeWIB(lastSyncedAt)} WIB`
-                  : "Offline"}
-            </span>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5">
+        <div className="flex flex-wrap items-center gap-2.5 xl:shrink-0 xl:flex-nowrap">
           <Link
             href="/history"
-            className="gw-pill-glass inline-flex min-h-[44px] items-center gap-2 px-4 text-[13px] font-medium text-[#242821] transition-colors hover:bg-[#F7F5EF]"
+            className="gw-pill-date inline-flex min-h-[44px] shrink-0 items-center gap-2 whitespace-nowrap px-4 text-[13px] font-medium text-white transition-colors hover:bg-[#7E7260]/45"
           >
-            <CalendarIcon size={16} className="text-[#526B42]" />
-            <span>{formatDatePillID()}</span>
+            <CalendarIcon size={16} className="text-white" />
+            <span suppressHydrationWarning>{formatDatePillID()}</span>
           </Link>
 
           {canInstallPwa && (
             <button
               type="button"
               onClick={() => void promptInstallPwa()}
-              className="hidden min-h-[44px] items-center gap-2 rounded-full bg-[#526B42] px-4 text-[13px] font-semibold text-[#F7F5EF] shadow-xs transition-opacity hover:opacity-95 lg:inline-flex"
+              className="hidden min-h-[44px] shrink-0 items-center gap-2 whitespace-nowrap rounded-full bg-[#526B42] px-4 text-[13px] font-semibold text-[#F7F5EF] shadow-xs transition-opacity hover:opacity-95 lg:inline-flex"
             >
               <DownloadIcon size={16} />
               <span>Install PWA</span>
@@ -116,7 +100,7 @@ export default function DashboardPage() {
           <Link
             href="/alerts"
             aria-label="Buka peringatan dan notifikasi"
-            className="gw-pill-glass relative hidden h-[44px] w-[44px] items-center justify-center text-[#242821] transition-colors hover:bg-[#F7F5EF] lg:inline-flex"
+            className="gw-pill-bell relative hidden h-[44px] w-[44px] shrink-0 items-center justify-center text-white transition-colors hover:bg-[#7E7260]/45 lg:inline-flex"
           >
             <BellIcon size={19} />
             {unreadAlertsCount > 0 && (
@@ -126,7 +110,7 @@ export default function DashboardPage() {
 
           <Link
             href="/settings"
-            className="gw-pill-glass inline-flex min-h-[44px] items-center gap-2 px-3.5 text-[13px] font-medium text-[#242821] transition-colors hover:bg-[#F7F5EF]"
+            className="gw-pill-glass inline-flex min-h-[44px] shrink-0 items-center gap-2 whitespace-nowrap px-3.5 text-[13px] font-medium text-[#242821] transition-colors hover:bg-[#F7F5EF]"
           >
             <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#526B42] text-[12px] font-bold text-[#F7F5EF]">
               RM
@@ -140,12 +124,12 @@ export default function DashboardPage() {
 
       {/* Subtle Notification Prompt when permission not yet granted */}
       {notificationPermission === "default" && (
-        <div className="gw-glass-readable flex flex-wrap items-center justify-between gap-3 px-4 py-3 text-[13px]">
-          <div className="flex items-center gap-2.5 text-[#242821]">
+        <div className="gw-glass-readable flex flex-col gap-3 px-4 py-3 text-[13px] sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex min-w-0 flex-1 items-center gap-2.5 text-[#242821]">
             <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#F5EBD2] text-[#78591C]">
               <BellIcon size={16} />
             </span>
-            <p>
+            <p className="leading-snug">
               Aktifkan notifikasi browser agar GridWatch langsung memberi tahu
               saat daya melewati{" "}
               <strong className="font-semibold">
@@ -157,7 +141,7 @@ export default function DashboardPage() {
           <button
             type="button"
             onClick={() => void enableNotifications()}
-            className="min-h-[38px] rounded-full bg-[#526B42] px-4 text-[13px] font-semibold text-[#F7F5EF] transition-opacity hover:opacity-95"
+            className="min-h-[38px] shrink-0 self-start whitespace-nowrap rounded-full bg-[#526B42] px-4 text-[13px] font-semibold text-[#F7F5EF] transition-opacity hover:opacity-95 sm:self-center"
           >
             Aktifkan Notifikasi
           </button>
@@ -205,32 +189,28 @@ export default function DashboardPage() {
         ) : (
           <>
             {/* KPI 1: Total Daya */}
-            <article className="gw-glass-kpi flex min-h-[124px] flex-col justify-between p-4 sm:min-h-[138px] sm:p-5">
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex items-center gap-3">
-                  <span
-                    className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${
-                      isOverTotalThreshold
-                        ? "bg-[#F9E3DE] text-[#B83220]"
-                        : "bg-[#E3E9DA] text-[#526B42]"
+            <article className="gw-glass-kpi flex min-h-[124px] flex-col justify-between p-4 sm:min-h-[136px] sm:p-5">
+              <div className="flex items-center gap-3">
+                <span
+                  className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${
+                    isOverTotalThreshold
+                      ? "bg-[#F9E3DE]/90 text-[#B83220]"
+                      : "bg-[#E3E9DA]/85 text-[#526B42]"
+                  }`}
+                >
+                  <BoltIcon size={22} />
+                </span>
+                <div className="min-w-0">
+                  <p className="text-[13px] font-medium text-gw-cream/90">
+                    Total Daya
+                  </p>
+                  <p
+                    className={`font-serif-display tabular-nums mt-0.5 whitespace-nowrap text-[24px] leading-tight sm:text-[31px] ${
+                      isOverTotalThreshold ? "text-[#B83220]" : "text-gw-cream"
                     }`}
                   >
-                    <BoltIcon size={22} />
-                  </span>
-                  <div className="min-w-0">
-                    <p className="text-[13px] font-medium text-[#5E655A]">
-                      Total Daya
-                    </p>
-                    <p
-                      className={`tabular-nums mt-0.5 text-[24px] font-bold leading-tight sm:text-[32px] ${
-                        isOverTotalThreshold
-                          ? "text-[#B83220]"
-                          : "text-[#242821]"
-                      }`}
-                    >
-                      {formatWatts(totalPowerW)}
-                    </p>
-                  </div>
+                    {formatWatts(totalPowerW)}
+                  </p>
                 </div>
               </div>
               <div className="mt-2 flex items-center justify-end">
@@ -249,16 +229,16 @@ export default function DashboardPage() {
             </article>
 
             {/* KPI 2: Energi Hari Ini */}
-            <article className="gw-glass-kpi flex min-h-[124px] flex-col justify-between p-4 sm:min-h-[138px] sm:p-5">
+            <article className="gw-glass-kpi flex min-h-[124px] flex-col justify-between p-4 sm:min-h-[136px] sm:p-5">
               <div className="flex items-center gap-3">
-                <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#E2EDF1] text-[#3C687A]">
+                <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#E2EDF1]/85 text-[#3C687A]">
                   <LayersIcon size={22} />
                 </span>
                 <div className="min-w-0">
-                  <p className="text-[13px] font-medium text-[#5E655A]">
+                  <p className="text-[13px] font-medium text-gw-cream/90">
                     Energi Hari Ini
                   </p>
-                  <p className="tabular-nums mt-0.5 text-[22px] font-bold leading-tight text-[#242821] sm:text-[30px]">
+                  <p className="font-serif-display tabular-nums mt-0.5 whitespace-nowrap text-[23px] leading-tight text-gw-cream sm:text-[30px]">
                     {formatKwh(todayEnergyKwh)}
                   </p>
                 </div>
@@ -271,16 +251,16 @@ export default function DashboardPage() {
             </article>
 
             {/* KPI 3: Estimasi Biaya */}
-            <article className="gw-glass-kpi flex min-h-[124px] flex-col justify-between p-4 sm:min-h-[138px] sm:p-5">
+            <article className="gw-glass-kpi flex min-h-[124px] flex-col justify-between p-4 sm:min-h-[136px] sm:p-5">
               <div className="flex items-center gap-3">
-                <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#F5EBD2] text-[#826120]">
+                <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F5EBD2]/85 text-[#826120]">
                   <LeafOutlineIcon size={22} />
                 </span>
                 <div className="min-w-0">
-                  <p className="text-[13px] font-medium text-[#5E655A]">
+                  <p className="text-[13px] font-medium text-gw-cream/90">
                     Estimasi Biaya
                   </p>
-                  <p className="tabular-nums mt-0.5 text-[22px] font-bold leading-tight text-[#242821] sm:text-[30px]">
+                  <p className="font-serif-display tabular-nums mt-0.5 whitespace-nowrap text-[23px] leading-tight text-gw-cream sm:text-[30px]">
                     {formatRupiah(estimatedCostRp)}
                   </p>
                 </div>
@@ -293,24 +273,19 @@ export default function DashboardPage() {
             </article>
 
             {/* KPI 4: Kanal Aktif */}
-            <article className="gw-glass-kpi flex min-h-[124px] flex-col justify-between p-4 sm:min-h-[138px] sm:p-5">
+            <article className="gw-glass-kpi flex min-h-[124px] flex-col justify-between p-4 sm:min-h-[136px] sm:p-5">
               <div className="flex items-center gap-3">
-                <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#E3E9DA] text-[#526B42]">
+                <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#E3E9DA]/85 text-[#526B42]">
                   <PlugIcon size={22} />
                 </span>
                 <div className="min-w-0">
-                  <p className="text-[13px] font-medium text-[#5E655A]">
+                  <p className="text-[13px] font-medium text-gw-cream/90">
                     Kanal Aktif
                   </p>
-                  <p className="tabular-nums mt-0.5 text-[24px] font-bold leading-tight text-[#242821] sm:text-[32px]">
+                  <p className="font-serif-display tabular-nums mt-0.5 whitespace-nowrap text-[24px] leading-tight text-gw-cream sm:text-[31px]">
                     {activeChannelsCount} / {channels.length}
                   </p>
                 </div>
-              </div>
-              <div className="mt-2 flex items-center justify-end">
-                <span className="rounded-full bg-[#E3E9DA] px-2.5 py-0.5 text-[11px] font-semibold text-[#35462F] sm:text-[12px]">
-                  Relay terkonfirmasi
-                </span>
               </div>
             </article>
           </>
@@ -337,13 +312,13 @@ export default function DashboardPage() {
               <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-[#F7F5EF]/70 text-[#35462F]">
                 <LayersIcon size={18} />
               </span>
-              <h2 className="font-serif-display text-[21px] text-[#242821] sm:text-[24px]">
+              <h2 className="font-serif-display text-[21px] text-gw-cream/90 sm:text-[24px]">
                 Kontrol Kanal
               </h2>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-[13px] font-medium text-[#35462F]">
+              <span className="text-[13px] font-medium text-gw-cream/90">
                 Kelola Semua
               </span>
               <ToggleSwitch
@@ -435,12 +410,12 @@ export default function DashboardPage() {
 
         <section
           aria-label="Aktivitas Terakhir"
-          className="gw-glass-readable flex flex-col justify-between p-5"
+          className="gw-glass-readable flex h-full flex-col px-5 py-4"
         >
-          <div className="mb-3 flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <ClockIcon size={18} className="text-[#526B42]" />
-              <h2 className="font-serif-display text-[20px] text-[#242821]">
+          <div className="mb-2.5 flex min-h-[26px] items-center justify-between gap-2">
+            <div className="flex items-center gap-2.5">
+              <ClockIcon size={32} className="text-[#526B42]" />
+              <h2 className="text-[16px] font-semibold tracking-tight text-[#242821]">
                 Aktivitas Terakhir
               </h2>
             </div>
@@ -448,45 +423,47 @@ export default function DashboardPage() {
               href="/history"
               className="inline-flex items-center gap-1 text-[13px] font-semibold text-[#526B42] hover:underline"
             >
-              Lihat Semua
+              <span className="text-black tracking-wider">Lihat Semua</span>
               <ArrowRightIcon size={14} />
             </Link>
           </div>
 
-          {activities.length === 0 ? (
-            <p className="py-6 text-center text-[13px] text-[#5E655A]">
-              Belum ada aktivitas tercatat hari ini.
-            </p>
-          ) : (
-            <ul className="divide-y divide-[#35462F]/10">
-              {activities.slice(0, 3).map((act) => (
-                <li
-                  key={act.id}
-                  className="flex items-center justify-between gap-3 py-2.5 first:pt-1 last:pb-0"
-                >
-                  <span className="flex min-w-0 items-center gap-2.5">
-                    <span
-                      className={`h-2.5 w-2.5 shrink-0 rounded-full ${
-                        act.tone === "critical"
-                          ? "bg-[#E8412C]"
-                          : act.tone === "warning"
-                            ? "bg-[#D7B36A]"
-                            : act.tone === "info"
-                              ? "bg-[#7FA8B8]"
-                              : "bg-[#526B42]"
-                      }`}
-                    />
-                    <span className="truncate text-[13px] font-medium text-[#242821]">
-                      {act.message}
+          <div className="flex flex-1 flex-col justify-center rounded-[18px] border border-white/50 bg-[#F7F5EF]/45 px-3.5 py-2">
+            {activities.length === 0 ? (
+              <p className="py-6 text-center text-[13px] text-[#5E655A]">
+                Belum ada aktivitas tercatat hari ini.
+              </p>
+            ) : (
+              <ul className="divide-y divide-[#35462F]/10">
+                {activities.slice(0, 3).map((act) => (
+                  <li
+                    key={act.id}
+                    className="flex items-center justify-between gap-3 py-2.5 first:pt-1.5 last:pb-1.5"
+                  >
+                    <span className="flex min-w-0 items-center gap-2.5">
+                      <span
+                        className={`h-2.5 w-2.5 shrink-0 rounded-full ${
+                          act.tone === "critical"
+                            ? "bg-[#E8412C]"
+                            : act.tone === "warning"
+                              ? "bg-[#D7B36A]"
+                              : act.tone === "info"
+                                ? "bg-[#7FA8B8]"
+                                : "bg-[#526B42]"
+                        }`}
+                      />
+                      <span className="truncate text-[13px] font-medium text-[#242821]">
+                        {act.message}
+                      </span>
                     </span>
-                  </span>
-                  <span className="tabular-nums shrink-0 text-[12px] text-[#5E655A]">
-                    {formatTimeWIB(act.occurredAt)}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
+                    <span className="tabular-nums shrink-0 text-[12px] text-[#5E655A]">
+                      {formatTimeWIB(act.occurredAt)}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </section>
       </div>
     </div>

@@ -47,10 +47,11 @@ export const DEFAULT_SETTINGS: GridWatchSettings = {
   cooldownSeconds: 30,
 };
 
+const INITIAL_REF_ISO = "2026-11-26T10:00:00.000Z";
+
 export function createInitialSimChannels(
   settings: GridWatchSettings
 ): ChannelReading[] {
-  const now = new Date().toISOString();
   const initialRelay: Record<ChannelId, boolean> = {
     1: true,
     2: true,
@@ -73,7 +74,7 @@ export function createInitialSimChannels(
       powerW,
       relayOn: isOn,
       commandState: "idle",
-      lastUpdatedAt: now,
+      lastUpdatedAt: INITIAL_REF_ISO,
       thresholdW: settings.channelThresholds[id],
     };
   });
@@ -209,27 +210,26 @@ export function buildSimulatedSeries(
 }
 
 export function createInitialActivities(): ActivityItem[] {
-  const now = Date.now();
   return [
     {
       id: "act-init-1",
       tone: "normal",
       message: "Kanal 3 (Kamar Tidur) dinyalakan",
-      occurredAt: new Date(now - 12 * 60_000).toISOString(),
+      occurredAt: "2026-11-26T10:00:00.000Z",
       channelId: 3,
     },
     {
       id: "act-init-2",
       tone: "warning",
       message: "Daya mencapai puncak 620 W pada pukul 17.00",
-      occurredAt: new Date(now - 28 * 60_000).toISOString(),
+      occurredAt: "2026-11-26T09:45:00.000Z",
       channelId: null,
     },
     {
       id: "act-init-3",
       tone: "normal",
       message: "Kanal 1 (Ruang Keluarga) dinyalakan",
-      occurredAt: new Date(now - 195 * 60_000).toISOString(),
+      occurredAt: "2026-11-26T00:45:00.000Z",
       channelId: 1,
     },
   ];

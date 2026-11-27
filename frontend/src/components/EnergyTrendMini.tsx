@@ -30,56 +30,57 @@ export const EnergyTrendMini = React.memo(function EnergyTrendMini({
   return (
     <section
       aria-label="Tren Energi"
-      className="gw-glass-readable flex flex-col justify-between p-5"
+      className="gw-glass-readable flex h-full flex-col px-5 py-4"
     >
-      <div className="mb-3 flex items-center gap-2">
-        <LeafOutlineIcon size={18} className="text-[#526B42]" />
-        <h2 className="font-serif-display text-[20px] text-[#242821]">
+      <div className="mb-2.5 flex min-h-[26px] items-center gap-2.5">
+        <LeafOutlineIcon size={32} className="text-[#526B42]" />
+        <h2 className="text-[16px] font-semibold tracking-tight text-[#242821]">
           Tren Energi
         </h2>
       </div>
 
-      <div className="flex items-end justify-between gap-4">
-        <div className="min-w-0">
-          <div className="flex flex-wrap items-center gap-2">
-            <p className="tabular-nums text-[26px] font-bold leading-none text-[#242821]">
+      <div className="flex flex-1  justify-between gap-2.5">
+        <div className="flex min-w-0 items-start gap-3 mt-5.5">
+          <div className="shrink-0">
+            <p className="font-serif-display tabular-nums whitespace-nowrap text-[23px] leading-none text-[#242821] xl:text-[26px]">
               {formatKwh(todayKwh)}
             </p>
+            <p className="mt-1.5 text-[12px] font-medium text-[#5E655A]">
+              Hari ini
+            </p>
+          </div>
+
+          <div className="min-w-0">
             <span
-              className={`tabular-nums rounded-full px-2.5 py-0.5 text-[12px] font-semibold ${
+              className={`tabular-nums inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-0.5 text-[12px] font-semibold ${
                 isLower
                   ? "bg-[#E3E9DA] text-[#35462F]"
                   : "bg-[#E2EDF1] text-[#2F5362]"
               }`}
             >
-              {deltaPct > 0 ? `+${deltaPct}%` : `${deltaPct}%`}
+              <span aria-hidden="true">{isLower ? "↓" : "↑"}</span>
+              <span>{deltaPct > 0 ? `+${deltaPct}%` : `${deltaPct}%`}</span>
             </span>
+            <p className="mt-1.5 whitespace-nowrap text-[11px] leading-snug text-[#5E655A] xl:text-[12px]">
+              dibanding kemarin
+              <br />({formatKwh(yesterdayKwh)})
+            </p>
           </div>
-          <p className="mt-1 text-[13px] font-medium text-[#5E655A]">
-            Hari ini
-          </p>
-          <p className="mt-2 text-[12px] leading-snug text-[#5E655A]">
-            dibanding kemarin ({formatKwh(yesterdayKwh)})
-          </p>
         </div>
 
         <div
-          className="flex h-[96px] items-end gap-2"
+          className="flex h-[124px] shrink-0 items-end gap-1.5"
           aria-label="Grafik batang 5 hari terakhir"
         >
           {MINI_BARS.map((bar, idx) => (
             <div
               key={bar.label}
-              className="flex h-full flex-col items-center justify-end gap-1"
-            >
-              <div
-                className={`w-3.5 rounded-t-md transition-all ${
-                  idx === 3 ? "bg-[#5E7A4B]" : "bg-[#9CAF88]/75"
-                }`}
-                style={{ height: `${bar.h}%` }}
-                title={`${bar.label}`}
-              />
-            </div>
+              className={`w-2.5 rounded-md transition-all xl:w-3 ${
+                idx === 3 ? "bg-[#5E7A4B]" : "bg-[#9CAF88]/75"
+              }`}
+              style={{ height: `${Math.round((bar.h / 100) * 92)}px` }}
+              title={bar.label}
+            />
           ))}
         </div>
       </div>

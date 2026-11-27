@@ -57,13 +57,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           height={900}
           decoding="async"
           fetchPriority="high"
-          className="h-full w-full object-cover object-center"
+          className="h-full w-full object-cover object-[75%_center] md:object-center"
         />
         <div
           className="absolute inset-0 md:hidden"
           style={{
             background:
-              "linear-gradient(180deg, rgba(247,245,239,0.52) 0%, rgba(235,237,228,0.68) 100%)",
+              "linear-gradient(150deg, rgba(66,82,55,0.28) 0%, rgba(247,245,239,0.16) 55%, rgba(247,245,239,0.24) 100%)",
           }}
         />
         <div
@@ -125,12 +125,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {/* Desktop Sidebar */}
         <aside
           aria-label="Navigasi utama"
-          className="gw-sidebar relative z-10 hidden lg:sticky lg:top-6 lg:flex lg:h-[calc(100dvh-3rem)] lg:w-[244px] lg:shrink-0 lg:flex-col lg:justify-between lg:rounded-[26px] lg:p-4"
+          className="gw-sidebar relative z-10 hidden overflow-y-auto lg:sticky lg:top-6 lg:flex lg:h-[calc(100dvh-3rem)] lg:w-[244px] lg:shrink-0 lg:flex-col lg:justify-between lg:rounded-[26px] lg:p-4"
         >
           <div>
             <Link
               href="/"
-              className="mb-7 flex items-center gap-2.5 px-2.5 pt-2 text-[#F7F5EF]"
+              className="mb-5 flex items-center gap-2.5 px-2.5 pt-1.5 text-[#F7F5EF] xl:mb-7"
             >
               <LeafLogoIcon size={28} className="text-[#F7F5EF]" />
               <span className="font-serif-display text-[25px] tracking-tight">
@@ -159,7 +159,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     <span className="flex items-center gap-3">
                       <Icon
                         size={19}
-                        className={active ? "text-[#526B42]" : "text-[#F7F5EF]/90"}
+                        className={
+                          active ? "text-[#526B42]" : "text-[#F7F5EF]/90"
+                        }
                       />
                       <span>{item.label}</span>
                     </span>
@@ -178,7 +180,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
 
           {/* Bottom Sidebar Action Card */}
-          <div className="mb-14 rounded-[20px] border border-white/28 bg-[#8A9A78]/40 p-4 text-[#F7F5EF]">
+          <div className="mt-4 mb-10 rounded-[20px] border border-white/28 bg-[#8A9A78]/40 p-4 text-[#F7F5EF] xl:mb-14">
             <p className="text-[13px] leading-relaxed text-[#F7F5EF]/95">
               {canInstallPwa
                 ? "Pasang GridWatch ke layar utama untuk akses cepat seperti aplikasi."
@@ -218,7 +220,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           height={260}
           decoding="async"
           aria-hidden="true"
-          className="pointer-events-none fixed bottom-0 left-0 z-30 hidden w-[230px] select-none object-contain lg:block xl:w-[260px]"
+          className="pointer-events-none fixed bottom-0 left-0 z-30 hidden max-h-[26dvh] w-[175px] select-none object-contain object-left-bottom lg:block xl:max-h-[34dvh] xl:w-[235px]"
         />
 
         {/* Main Content Column */}

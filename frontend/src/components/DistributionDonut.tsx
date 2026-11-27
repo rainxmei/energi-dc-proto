@@ -34,30 +34,38 @@ export const DistributionDonut = React.memo(function DistributionDonut({
   const chartData =
     safeTotal > 0
       ? items.filter((item) => item.value > 0)
-      : [{ id: 0, name: "Tidak ada beban", value: 1, pct: 0, color: "#D6D2C8" }];
+      : [
+          {
+            id: 0,
+            name: "Tidak ada beban",
+            value: 1,
+            pct: 0,
+            color: "#D6D2C8",
+          },
+        ];
 
   return (
     <section
       aria-label="Distribusi Penggunaan"
-      className="gw-glass-readable flex flex-col justify-between p-5"
+      className="gw-glass-readable flex h-full flex-col px-5 py-4"
     >
-      <div className="mb-3 flex items-center gap-2">
-        <LayersIcon size={18} className="text-[#526B42]" />
-        <h2 className="font-serif-display text-[20px] text-[#242821]">
+      <div className="mb-2.5 flex min-h-[26px] items-center gap-2.5">
+        <LayersIcon size={32} className="text-[#526B42]" />
+        <h2 className="text-[16px] font-semibold tracking-tight text-[#242821]">
           Distribusi Penggunaan
         </h2>
       </div>
 
-      <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-center">
-        <div className="relative h-[132px] w-[132px] shrink-0">
+      <div className="flex flex-1 flex-col items-center justify-center gap-4 sm:flex-row sm:items-center">
+        <div className="relative h-[120px] w-[120px] shrink-0">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={chartData}
                 dataKey="value"
                 nameKey="name"
-                innerRadius={42}
-                outerRadius={60}
+                innerRadius={38}
+                outerRadius={54}
                 paddingAngle={safeTotal > 0 ? 2 : 0}
                 stroke="none"
                 isAnimationActive={false}
