@@ -1,0 +1,170 @@
+@import "tailwindcss";
+
+:root {
+  --gw-sage: #9caf88;
+  --gw-cream: #f7f5ef;
+  --gw-red: #e8412c;
+  --gw-blue: #7fa8b8;
+  --gw-yellow: #d7b36a;
+
+  --gw-forest: #526b42;
+  --gw-deep-olive: #35462f;
+  --gw-ink: #242821;
+  --gw-muted: #5e655a;
+  --gw-soft-sage: #e3e9da;
+  --gw-soft-blue: #e2edf1;
+  --gw-soft-yellow: #f5ebd2;
+  --gw-soft-red: #f9e3de;
+  --gw-off-neutral: #d6d2c8;
+
+  /* Atur tingkat transparansi panel/card di sini (angka terakhir = opacity 0.0 - 1.0) */
+  --gw-sidebar-bg: rgba(104, 118, 92, 0.34);
+  /* Sidebar kiri desktop */
+  --gw-glass: rgba(247, 245, 239, 0.50);
+  /* Card utama (Grafik & Kontrol Kanal) */
+  --gw-glass-kpi: rgba(244, 255, 220, 0.1);
+  /* 4 Card KPI atas */
+  --gw-glass-strong: rgba(247, 245, 239, 0.40);
+  /* Card bawah (Distribusi, Tren, Aktivitas) & halaman detail */
+  --gw-glass-row: rgba(247, 245, 239, 0.22);
+  /* Baris kanal di dalam card Kontrol Kanal */
+  --gw-glass-border: rgba(255, 255, 255, 0.52);
+  --gw-glass-shadow: 0 16px 40px rgba(39, 49, 33, 0.12);
+
+  --gw-card-radius: 24px;
+  --gw-inner-radius: 16px;
+  --gw-pill-radius: 999px;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    font-family: var(--font-dm-sans), system-ui, -apple-system, sans-serif;
+    color: var(--gw-ink);
+    background-color: #d8dccf;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+
+  a[href],
+  button:not(:disabled),
+  summary,
+  select:not(:disabled),
+  label[for],
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [role="tab"]:not([aria-disabled="true"]),
+  [role="switch"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  select:disabled,
+  input:disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--gw-forest);
+    outline-offset: 2px;
+  }
+}
+
+.font-serif-display {
+  font-family: var(--font-dm-serif), Georgia, "Times New Roman", serif;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Frosted surfaces tuned for contrast over the warm interior backdrop */
+.gw-sidebar {
+  background: var(--gw-sidebar-bg);
+  border: 1px solid rgba(255, 255, 255, 0.36);
+  box-shadow: 0 18px 42px rgba(31, 41, 26, 0.14);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.gw-glass {
+  background: var(--gw-glass);
+  border: 1px solid var(--gw-glass-border);
+  border-radius: var(--gw-card-radius);
+  box-shadow: var(--gw-glass-shadow);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+}
+
+.gw-glass-kpi {
+  background: var(--gw-glass-kpi);
+  border: 1px solid var(--gw-glass-border);
+  border-radius: var(--gw-card-radius);
+  box-shadow: 0 12px 32px rgba(39, 49, 33, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.gw-glass-readable {
+  background: var(--gw-glass-strong);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: var(--gw-card-radius);
+  box-shadow: 0 14px 36px rgba(39, 49, 33, 0.1);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.gw-inner-row {
+  background: var(--gw-glass-row);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: var(--gw-inner-radius);
+}
+
+.gw-pill-glass {
+  background: rgba(247, 245, 239, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.58);
+  border-radius: var(--gw-pill-radius);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .gw-sidebar {
+    background: rgba(74, 88, 63, 0.94);
+  }
+
+  .gw-glass,
+  .gw-glass-kpi,
+  .gw-glass-readable,
+  .gw-inner-row,
+  .gw-pill-glass {
+    background: rgba(247, 245, 239, 0.94);
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --gw-glass: rgba(247, 245, 239, 0.72);
+    --gw-glass-kpi: rgba(247, 245, 239, 0.74);
+    --gw-glass-strong: rgba(247, 245, 239, 0.88);
+    --gw-card-radius: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
