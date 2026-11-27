@@ -1,0 +1,11 @@
+node_modules
+.env
+.env.local
+.vercel
+
+# ML
+ml/.env
+ml/model/
+ml/model_sim/
+ml/data*.csv
+__pycache__/
