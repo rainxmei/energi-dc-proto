@@ -45,9 +45,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="relative min-h-[100dvh] w-full">
-      {/* Persistent Interior Backdrop (GPU-promoted static layer) */}
+      {/* Persistent Interior Backdrop (locked to 100lvh on mobile so address-bar scroll never shifts crop) */}
       <div
-        className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
+        className="pointer-events-none fixed top-0 left-0 -z-10 h-[100lvh] w-full overflow-hidden md:inset-0 md:h-auto"
         style={{ transform: "translateZ(0)" }}
       >
         <img
@@ -295,7 +295,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* Mobile Floating Bottom Navigation */}
       <nav
         aria-label="Navigasi bawah mobile"
-        className="gw-glass-readable fixed right-3 bottom-3 left-3 z-40 rounded-[24px] px-2 py-1.5 shadow-lg lg:hidden"
+        className="gw-mobile-nav fixed right-3 bottom-3 left-3 z-40 rounded-[24px] px-2 py-1.5 shadow-lg lg:hidden"
         style={{
           paddingBottom: "calc(0.375rem + env(safe-area-inset-bottom))",
         }}
